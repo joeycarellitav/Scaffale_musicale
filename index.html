@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scaffale Musicale — la tua collezione di brani</title>
+<title>Scaffale Musicale — la collezione condivisa di brani</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2311121a'/%3E%3Cg fill='%23e8a33d'%3E%3Crect x='8' y='15' width='3' height='9' rx='1.2'/%3E%3Crect x='14.5' y='9' width='3' height='15' rx='1.2'/%3E%3Crect x='21' y='12' width='3' height='12' rx='1.2'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,229 +48,106 @@
   button{ font-family:inherit; cursor:pointer; }
   input{ font-family:inherit; }
   :focus-visible{ outline:2px solid var(--accent2); outline-offset:2px; border-radius:6px; }
+  [hidden]{ display:none !important; }
 
-  .app{
-    max-width:980px;
-    margin:0 auto;
-    padding:40px 24px 80px;
-  }
+  /* ---------- Layout shell ---------- */
+  .app{ max-width:980px; margin:0 auto; padding:40px 24px 80px; }
 
   /* ---------- Header ---------- */
-  .topbar{
-    display:flex;
-    flex-wrap:wrap;
-    gap:24px;
-    justify-content:space-between;
-    align-items:flex-start;
-    margin-bottom:36px;
-  }
+  .topbar{ display:flex; flex-wrap:wrap; gap:24px; justify-content:space-between; align-items:flex-start; margin-bottom:28px; }
   .brand{ display:flex; gap:14px; align-items:center; }
   .brand-mark{ width:46px; height:46px; flex:none; }
-  .brand h1{
-    font-family:var(--font-display);
-    font-size:28px;
-    font-weight:600;
-    letter-spacing:-0.01em;
-    margin:0;
-  }
-  .brand .tagline{
-    margin:2px 0 0;
-    font-size:13.5px;
-    color:var(--text-muted);
-  }
+  .brand h1{ font-family:var(--font-display); font-size:28px; font-weight:600; letter-spacing:-0.01em; margin:0; }
+  .brand .tagline{ margin:2px 0 0; font-size:13.5px; color:var(--text-muted); }
 
-  .controls{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    align-items:center;
-  }
-  .track-count{
-    font-family:var(--font-mono);
-    font-size:12px;
-    color:var(--text-faint);
-    white-space:nowrap;
-    padding-right:4px;
-  }
+  .controls{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+  .track-count{ font-family:var(--font-mono); font-size:12px; color:var(--text-faint); white-space:nowrap; padding-right:4px; }
   .search-wrap{ position:relative; }
-  .search-wrap input{
-    width:220px;
-    background:var(--bg-elevated);
-    border:1px solid var(--border);
-    color:var(--text);
-    padding:10px 12px 10px 34px;
-    border-radius:var(--radius-sm);
-    font-size:14px;
-  }
+  .search-wrap input{ width:200px; background:var(--bg-elevated); border:1px solid var(--border); color:var(--text); padding:10px 12px 10px 34px; border-radius:var(--radius-sm); font-size:14px; }
   .search-wrap input::placeholder{ color:var(--text-faint); }
-  .search-wrap svg{
-    position:absolute; left:11px; top:50%; transform:translateY(-50%);
-    width:14px; height:14px; color:var(--text-faint); pointer-events:none;
-  }
+  .search-wrap svg{ position:absolute; left:11px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:var(--text-faint); pointer-events:none; }
   select#sortSelect{
-    background:var(--bg-elevated);
-    border:1px solid var(--border);
-    color:var(--text);
-    padding:10px 12px;
-    border-radius:var(--radius-sm);
-    font-size:14px;
-    appearance:none;
+    background:var(--bg-elevated); border:1px solid var(--border); color:var(--text);
+    padding:10px 12px; border-radius:var(--radius-sm); font-size:14px; appearance:none;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238d90a3'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;
-    background-position:right 12px center;
-    padding-right:30px;
+    background-repeat:no-repeat; background-position:right 12px center; padding-right:30px;
   }
 
-  .btn-primary{
-    background:var(--accent);
-    color:#1a1305;
-    border:none;
-    font-weight:600;
-    font-size:14px;
-    padding:10px 16px;
-    border-radius:var(--radius-sm);
-    transition:background .15s ease, transform .1s ease;
-  }
+  .btn-primary{ background:var(--accent); color:#1a1305; border:none; font-weight:600; font-size:14px; padding:10px 16px; border-radius:var(--radius-sm); transition:background .15s ease, transform .1s ease; }
   .btn-primary:hover{ background:#f0b258; }
   .btn-primary:active{ transform:scale(0.97); }
+  .btn-primary:disabled{ opacity:.55; cursor:default; }
 
-  .btn-ghost{
-    background:transparent;
-    color:var(--text-muted);
-    border:1px solid var(--border);
-    font-size:14px;
-    padding:10px 16px;
-    border-radius:var(--radius-sm);
-  }
+  .btn-ghost{ background:transparent; color:var(--text-muted); border:1px solid var(--border); font-size:14px; padding:10px 16px; border-radius:var(--radius-sm); }
   .btn-ghost:hover{ color:var(--text); border-color:var(--text-faint); }
 
-  .btn-secondary{
-    background:var(--bg-elevated-hover);
-    color:var(--text);
-    border:1px solid var(--border);
-    font-size:13px;
-    padding:9px 13px;
-    border-radius:var(--radius-sm);
-    white-space:nowrap;
-  }
+  .btn-secondary{ background:var(--bg-elevated-hover); color:var(--text); border:1px solid var(--border); font-size:13px; padding:9px 13px; border-radius:var(--radius-sm); white-space:nowrap; }
   .btn-secondary:hover{ border-color:var(--accent2); }
+  .btn-secondary:disabled{ opacity:.5; cursor:default; }
 
-  /* ---------- Empty state ---------- */
-  .empty-state{
-    text-align:center;
-    padding:70px 20px;
-    color:var(--text-muted);
-    border:1px dashed var(--border);
-    border-radius:var(--radius);
-  }
+  /* user pill */
+  .user-pill{ display:flex; align-items:center; gap:8px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:999px; padding:6px 6px 6px 14px; font-size:13px; }
+  .user-pill .name{ font-weight:600; }
+  .user-pill .admin-badge{ background:var(--accent-soft); color:var(--accent); font-size:10px; font-weight:700; letter-spacing:.04em; padding:2px 6px; border-radius:5px; }
+  .user-pill .logout-btn{ background:none; border:none; color:var(--text-faint); width:26px; height:26px; display:flex; align-items:center; justify-content:center; border-radius:50%; }
+  .user-pill .logout-btn:hover{ background:var(--bg-elevated-hover); color:var(--danger); }
+  .user-pill .logout-btn svg{ width:14px; height:14px; }
+
+  /* ---------- Banners / states ---------- */
+  .error-banner{ background:var(--danger-soft); border:1px solid var(--danger); color:var(--danger); padding:12px 16px; border-radius:var(--radius-sm); margin-bottom:18px; font-size:13.5px; }
+  .loading-text, .no-results{ text-align:center; padding:50px 20px; color:var(--text-faint); font-size:14px; }
+
+  .empty-state{ text-align:center; padding:70px 20px; color:var(--text-muted); border:1px dashed var(--border); border-radius:var(--radius); }
   .empty-state svg{ width:54px; height:54px; color:var(--text-faint); margin-bottom:14px; }
-  .empty-state h2{
-    font-family:var(--font-display);
-    font-size:20px;
-    color:var(--text);
-    margin:0 0 6px;
-    font-weight:600;
-  }
+  .empty-state h2{ font-family:var(--font-display); font-size:20px; color:var(--text); margin:0 0 6px; font-weight:600; }
   .empty-state p{ margin:0; font-size:14px; }
-
-  .no-results{
-    text-align:center;
-    padding:40px 20px;
-    color:var(--text-faint);
-    font-size:14px;
-  }
 
   /* ---------- Track list ---------- */
   .track-list{ display:flex; flex-direction:column; gap:10px; }
 
   .track{
-    background:var(--bg-elevated);
-    border:1px solid var(--border-soft);
-    border-radius:var(--radius);
-    padding:14px 16px;
-    display:grid;
-    grid-template-columns:36px 64px 1fr auto auto;
-    gap:16px;
-    align-items:center;
-    transition:border-color .15s ease, background .15s ease;
+    background:var(--bg-elevated); border:1px solid var(--border-soft); border-radius:var(--radius);
+    padding:14px 16px; display:grid; grid-template-columns:36px 64px 1fr auto auto;
+    gap:16px; align-items:center; transition:border-color .15s ease, background .15s ease;
   }
   .track:hover{ border-color:var(--border); background:var(--bg-elevated-hover); }
   .track.is-expanded{ border-color:var(--accent-dim); }
 
-  .track-index{
-    font-family:var(--font-mono);
-    font-size:12px;
-    color:var(--text-faint);
-    text-align:center;
-  }
+  .track-index{ font-family:var(--font-mono); font-size:12px; color:var(--text-faint); text-align:center; }
 
-  .track-thumb{
-    width:64px; height:64px;
-    border-radius:10px;
-    overflow:hidden;
-    background:linear-gradient(135deg, #20222f, #181a24);
-    display:flex; align-items:center; justify-content:center;
-    flex:none;
-  }
+  .track-thumb{ width:64px; height:64px; border-radius:10px; overflow:hidden; background:linear-gradient(135deg, #20222f, #181a24); display:flex; align-items:center; justify-content:center; flex:none; }
   .track-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
   .track-thumb svg{ width:22px; height:22px; color:var(--text-faint); }
 
   .track-info{ min-width:0; }
-  .track-title{
-    font-family:var(--font-display);
-    font-size:17px;
-    font-weight:600;
-    margin:0;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-  .track-meta{
-    margin:3px 0 0;
-    font-size:12.5px;
-    color:var(--text-muted);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
+  .track-title{ font-family:var(--font-display); font-size:17px; font-weight:600; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .track-meta{ margin:3px 0 0; font-size:12.5px; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .track-meta .dot{ margin:0 6px; color:var(--text-faint); }
   .track-meta .date{ font-family:var(--font-mono); color:var(--text-faint); }
+  .track-meta .owner{ color:var(--accent2); }
 
-  /* now-playing mini equalizer */
   .now-playing{ display:inline-flex; align-items:flex-end; gap:2px; height:11px; margin-right:6px; vertical-align:middle; }
   .now-playing span{ width:2.5px; background:var(--accent); border-radius:1px; animation:eqPulse 0.9s ease-in-out infinite; }
   .now-playing span:nth-child(1){ height:40%; animation-delay:0s; }
   .now-playing span:nth-child(2){ height:100%; animation-delay:.2s; }
   .now-playing span:nth-child(3){ height:65%; animation-delay:.4s; }
   @keyframes eqPulse{ 0%,100%{ transform:scaleY(0.4); } 50%{ transform:scaleY(1); } }
-  @media (prefers-reduced-motion: reduce){
-    .now-playing span{ animation:none; height:70% !important; }
-  }
+  @media (prefers-reduced-motion: reduce){ .now-playing span{ animation:none; height:70% !important; } }
 
-  /* rating bars */
+  .rating-block{ display:flex; flex-direction:column; gap:4px; align-items:flex-start; }
   .rating{ display:flex; align-items:flex-end; gap:3px; height:22px; padding:0 4px; }
-  .rating .bar{
-    width:5px; height:var(--h);
-    background:var(--border);
-    border:none; border-radius:2px;
-    padding:0; transition:background .1s ease;
-  }
+  .rating .bar{ width:5px; height:var(--h); background:var(--border); border:none; border-radius:2px; padding:0; transition:background .1s ease; }
   .rating .bar.filled{ background:var(--accent); }
   .rating .bar.preview{ background:var(--accent2); }
-  .rating .reset-rating{
-    background:none; border:none; color:var(--text-faint);
-    font-size:13px; padding:0 0 0 4px; line-height:1; visibility:hidden;
-  }
+  .rating .reset-rating{ background:none; border:none; color:var(--text-faint); font-size:13px; padding:0 0 0 4px; line-height:1; visibility:hidden; }
   .rating .reset-rating.visible{ visibility:visible; }
   .rating .reset-rating:hover{ color:var(--danger); }
+  .rating-avg{ font-family:var(--font-mono); font-size:11px; color:var(--text-faint); padding-left:4px; }
+  .rating-avg strong{ color:var(--accent); font-weight:600; }
+  .rating-hint{ font-size:10px; color:var(--text-faint); padding-left:4px; }
 
   .track-actions{ display:flex; align-items:center; gap:4px; }
-  .icon-btn{
-    width:34px; height:34px;
-    display:flex; align-items:center; justify-content:center;
-    background:transparent; border:1px solid transparent; border-radius:9px;
-    color:var(--text-muted);
-  }
+  .icon-btn{ width:34px; height:34px; display:flex; align-items:center; justify-content:center; background:transparent; border:1px solid transparent; border-radius:9px; color:var(--text-muted); }
   .icon-btn svg{ width:16px; height:16px; }
   .icon-btn:hover{ background:var(--bg-elevated-hover); color:var(--text); border-color:var(--border); }
   .icon-btn.play-btn{ color:var(--accent); }
@@ -284,81 +161,111 @@
   .confirm-delete .no{ color:var(--text-muted); }
   .confirm-delete .no:hover{ background:var(--bg-elevated-hover); }
 
-  .track-player{
-    grid-column:1 / -1;
-    margin-top:12px;
-    border-top:1px solid var(--border-soft);
-    padding-top:12px;
-  }
-  .track-player iframe{
-    width:100%; aspect-ratio:16/9; border:none; border-radius:10px; display:block;
-  }
+  .track-player{ grid-column:1 / -1; margin-top:12px; border-top:1px solid var(--border-soft); padding-top:12px; }
+  .track-player iframe{ width:100%; aspect-ratio:16/9; border:none; border-radius:10px; display:block; }
   .track-player audio, .track-player video{ width:100%; display:block; border-radius:10px; }
   .track-player video{ max-height:420px; background:#000; }
 
-  /* ---------- Modal ---------- */
-  .modal-overlay{
-    position:fixed; inset:0; background:rgba(10,11,16,0.7);
-    display:flex; align-items:center; justify-content:center;
-    padding:20px; z-index:50;
-  }
-  .modal-overlay[hidden]{ display:none; }
-  .modal{
-    background:var(--bg-elevated);
-    border:1px solid var(--border);
-    border-radius:var(--radius);
-    width:100%; max-width:440px;
-    padding:26px;
-  }
-  .modal h2{
-    font-family:var(--font-display);
-    font-size:21px; font-weight:600; margin:0 0 18px;
-  }
+  /* ---------- Modal (aggiungi/modifica brano) ---------- */
+  .modal-overlay{ position:fixed; inset:0; background:rgba(10,11,16,0.7); display:flex; align-items:center; justify-content:center; padding:20px; z-index:50; }
+  .modal{ background:var(--bg-elevated); border:1px solid var(--border); border-radius:var(--radius); width:100%; max-width:440px; padding:26px; }
+  .modal h2{ font-family:var(--font-display); font-size:21px; font-weight:600; margin:0 0 18px; }
   .field{ margin-bottom:16px; }
-  .field label{
-    display:block; font-size:12.5px; color:var(--text-muted);
-    margin-bottom:6px; font-weight:500;
-  }
+  .field label{ display:block; font-size:12.5px; color:var(--text-muted); margin-bottom:6px; font-weight:500; }
   .field-row{ display:flex; gap:8px; }
   .field-row input{ flex:1; }
-  .field input{
-    width:100%;
-    background:var(--bg); border:1px solid var(--border); color:var(--text);
-    padding:10px 12px; border-radius:var(--radius-sm); font-size:14px;
-  }
+  .field input{ width:100%; background:var(--bg); border:1px solid var(--border); color:var(--text); padding:10px 12px; border-radius:var(--radius-sm); font-size:14px; }
   .field input:focus{ border-color:var(--accent2); }
-  .meta-status{
-    font-size:12.5px; color:var(--text-faint);
-    margin:-6px 0 16px; min-height:16px;
-  }
+  .meta-status{ font-size:12.5px; color:var(--text-faint); margin:-6px 0 16px; min-height:16px; }
   .meta-status.ok{ color:var(--accent); }
   .meta-status.err{ color:var(--danger); }
   .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:6px; }
 
+  /* ---------- Auth screen ---------- */
+  .auth-screen{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .auth-card{ width:100%; max-width:380px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:var(--radius); padding:32px; }
+  .auth-card .brand{ justify-content:center; margin-bottom:26px; }
+  .auth-tabs{ display:flex; gap:4px; background:var(--bg); border:1px solid var(--border); border-radius:var(--radius-sm); padding:4px; margin-bottom:22px; }
+  .auth-tabs button{ flex:1; background:none; border:none; color:var(--text-muted); padding:9px; border-radius:7px; font-size:13.5px; font-weight:600; }
+  .auth-tabs button.active{ background:var(--accent); color:#1a1305; }
+  .auth-error{ font-size:13px; color:var(--danger); background:var(--danger-soft); border-radius:var(--radius-sm); padding:9px 12px; margin-bottom:14px; }
+  .auth-error:empty{ display:none; }
+  .auth-hint{ font-size:11.5px; color:var(--text-faint); margin-top:16px; text-align:center; line-height:1.5; }
+
+  /* ---------- Config-needed full screen ---------- */
+  .config-needed{ max-width:600px; margin:70px auto; padding:0 24px 60px; color:var(--text-muted); }
+  .config-needed h1{ font-family:var(--font-display); color:var(--text); font-size:24px; margin-bottom:6px; }
+  .config-needed p{ font-size:14.5px; }
+  .config-needed code{ background:var(--bg-elevated); padding:2px 6px; border-radius:5px; font-family:var(--font-mono); font-size:13px; color:var(--accent); }
+  .config-needed ol{ padding-left:20px; font-size:14.5px; }
+  .config-needed li{ margin-bottom:8px; }
+
   /* ---------- Responsive ---------- */
   @media (max-width:640px){
-    .track{
-      grid-template-columns:44px 1fr auto;
-      grid-template-areas:
-        "thumb info actions"
-        "rating rating rating";
-      row-gap:10px;
-    }
+    .track{ grid-template-columns:44px 1fr auto; grid-template-areas:"thumb info actions" "rating rating rating"; row-gap:10px; }
     .track-index{ display:none; }
     .track-thumb{ grid-area:thumb; width:44px; height:44px; }
     .track-info{ grid-area:info; }
     .track-actions{ grid-area:actions; }
-    .rating{ grid-area:rating; justify-self:start; }
+    .rating-block{ grid-area:rating; align-items:flex-start; }
     .topbar{ flex-direction:column; }
     .controls{ width:100%; }
     .search-wrap, .search-wrap input{ width:100%; }
     .controls > *{ flex:1 1 auto; }
+    .user-pill{ flex:0 0 auto; }
   }
 </style>
 </head>
 <body>
 
-<div class="app">
+<!-- ====== Schermata: configurazione Firebase mancante ====== -->
+<div class="config-needed" id="configNeeded" hidden>
+  <h1>Configurazione necessaria</h1>
+  <p>Questo sito condiviso ha bisogno di un progetto Firebase (gratuito) per salvare gli utenti e i brani. Apri il file <code>scaffale-musicale.html</code> in un editor di testo, cerca il blocco <code>CONFIGURAZIONE FIREBASE</code> in cima allo script e inserisci i valori del tuo progetto.</p>
+  <p>Le istruzioni complete passo-passo sono nel file <code>SETUP.md</code> incluso insieme a questo sito.</p>
+</div>
+
+<!-- ====== Schermata di accesso ====== -->
+<div class="auth-screen" id="authScreen" hidden>
+  <div class="auth-card">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="8" fill="#1a1c28" stroke="#2c2e3d"/>
+        <rect x="8" y="15" width="3" height="9" rx="1.2" fill="#e8a33d"/>
+        <rect x="14.5" y="9" width="3" height="15" rx="1.2" fill="#e8a33d"/>
+        <rect x="21" y="12" width="3" height="12" rx="1.2" fill="#e8a33d"/>
+      </svg>
+      <div><h1 style="font-family:var(--font-display);font-size:22px;margin:0;">Scaffale Musicale</h1></div>
+    </div>
+
+    <div class="auth-tabs">
+      <button type="button" id="tabLogin" class="active">Accedi</button>
+      <button type="button" id="tabRegister">Registrati</button>
+    </div>
+
+    <div class="auth-error" id="authError"></div>
+
+    <div class="field">
+      <label for="authUsername">Nome utente</label>
+      <input type="text" id="authUsername" autocomplete="username" placeholder="es. mario">
+    </div>
+    <div class="field">
+      <label for="authPassword">Password</label>
+      <input type="password" id="authPassword" autocomplete="current-password" placeholder="almeno 6 caratteri">
+    </div>
+    <div class="field" id="confirmField" hidden>
+      <label for="authPasswordConfirm">Conferma password</label>
+      <input type="password" id="authPasswordConfirm" autocomplete="new-password">
+    </div>
+
+    <button class="btn-primary" id="authSubmit" style="width:100%;" type="button">Accedi</button>
+
+    <p class="auth-hint" id="authHint">Usa solo lettere, numeri, punto, trattino o underscore (3-20 caratteri). Non c'è un vero indirizzo email collegato: se perdi la password, dovrai creare un nuovo nome utente.</p>
+  </div>
+</div>
+
+<!-- ====== App principale ====== -->
+<div class="app" id="appRoot" hidden>
 
   <header class="topbar">
     <div class="brand">
@@ -370,7 +277,7 @@
       </svg>
       <div>
         <h1>Scaffale Musicale</h1>
-        <p class="tagline">La tua collezione personale di brani — link, voti, ascolto.</p>
+        <p class="tagline">La collezione condivisa di brani — link, voti, ascolto.</p>
       </div>
     </div>
     <div class="controls">
@@ -384,17 +291,28 @@
         <option value="date-asc">Meno recenti</option>
         <option value="title-asc">Titolo (A→Z)</option>
         <option value="title-desc">Titolo (Z→A)</option>
-        <option value="rating-desc">Punteggio (alto→basso)</option>
-        <option value="rating-asc">Punteggio (basso→alto)</option>
+        <option value="rating-desc">Punteggio medio (alto→basso)</option>
+        <option value="rating-asc">Punteggio medio (basso→alto)</option>
       </select>
       <button class="btn-primary" id="addBtn">+ Aggiungi brano</button>
+      <div class="user-pill" id="userPill">
+        <span class="name" id="userPillName">—</span>
+        <span class="admin-badge" id="adminBadge" hidden>ADMIN</span>
+        <button class="logout-btn" id="logoutBtn" title="Esci">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        </button>
+      </div>
     </div>
   </header>
+
+  <div class="error-banner" id="errorBanner" hidden></div>
+
+  <div class="loading-text" id="loadingText">Caricamento brani…</div>
 
   <div class="empty-state" id="emptyState" hidden>
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="2.6"/></svg>
     <h2>Lo scaffale è vuoto</h2>
-    <p>Aggiungi il tuo primo brano da un link YouTube (o altro) per iniziare la collezione.</p>
+    <p>Aggiungi il primo brano da un link YouTube (o altro) per iniziare la collezione condivisa.</p>
   </div>
 
   <div class="no-results" id="noResults" hidden>Nessun brano corrisponde alla ricerca.</div>
@@ -403,7 +321,7 @@
 
 </div>
 
-<!-- Modal: aggiungi / modifica -->
+<!-- Modal: aggiungi / modifica brano -->
 <div class="modal-overlay" id="modalOverlay" hidden>
   <div class="modal">
     <h2 id="modalTitle">Aggiungi brano</h2>
@@ -434,11 +352,44 @@
   </div>
 </div>
 
+<!-- Firebase (compat SDK, niente build step necessario) -->
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore-compat.js"></script>
+
 <script>
 (function(){
   "use strict";
 
-  const STORAGE_KEY = "scaffaleMusicale.tracks.v1";
+  /* ============================================================
+     CONFIGURAZIONE FIREBASE — MODIFICA QUI ↓↓↓
+     Incolla qui l'oggetto firebaseConfig che trovi nella console
+     Firebase del tuo progetto (Impostazioni progetto → Generale →
+     Le tue app → app Web). Istruzioni complete in SETUP.md.
+  ============================================================ */
+  const firebaseConfig = {
+    apiKey: "AIzaSyAniX_z_wmnVKiZTbez9-U6wzYj8k-WRWc",
+    authDomain: "scaffale-musicale.firebaseapp.com",
+    projectId: "scaffale-musicale",
+    storageBucket: "scaffale-musicale.firebasestorage.app",
+    messagingSenderId: "320576673430",
+    appId: "1:320576673430:web:1b1ca2e46314829a36d4b7"
+  };
+  /* ============================================================
+     MODIFICA QUI ↑↑↑ — non toccare il codice sotto questa riga
+  ============================================================ */
+
+  const FAKE_EMAIL_DOMAIN = "scaffalemusicale.app";
+  const USERNAME_RE = /^[a-zA-Z0-9_.-]{3,20}$/;
+
+  if(!firebaseConfig.apiKey || firebaseConfig.apiKey.indexOf("INSERISCI") === 0){
+    document.getElementById("configNeeded").hidden = false;
+    return;
+  }
+
+  const app = firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
   /* ---------- Icone SVG ---------- */
   const ICONS = {
@@ -451,22 +402,18 @@
   };
 
   /* ---------- Stato ---------- */
-  let tracks = loadTracks();
+  let tracks = [];
+  let tracksLoaded = false;
+  let unsubscribeTracks = null;
+  let currentUser = null; // { uid, displayName }
   let expandedId = null;
   let pendingDeleteId = null;
-  let metaCache = { videoId:null, thumbnail:null }; // dati rilevati nel modale corrente
+  let metaCache = { videoId:null, thumbnail:null };
   let editingId = null;
+  let authMode = "login";
 
-  /* ---------- Persistenza ---------- */
-  function loadTracks(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    }catch(e){ return []; }
-  }
-  function saveTracks(){
-    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(tracks)); }
-    catch(e){ console.error("Salvataggio non riuscito", e); }
+  function isAdmin(){
+    return !!currentUser && currentUser.displayName.toLowerCase() === "admin";
   }
 
   /* ---------- Utility ---------- */
@@ -474,6 +421,10 @@
     return String(str || "").replace(/[&<>"']/g, c => ({
       "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
     }[c]));
+  }
+
+  function usernameToEmail(username){
+    return username.trim().toLowerCase().replace(/\s+/g,"_") + "@" + FAKE_EMAIL_DOMAIN;
   }
 
   function extractYouTubeId(url){
@@ -505,15 +456,170 @@
     return res.json();
   }
 
-  function formatDate(iso){
-    const d = new Date(iso);
+  function toMillis(ts){
+    if(!ts) return Date.now();
+    if(typeof ts.toMillis === "function") return ts.toMillis();
+    if(typeof ts === "number") return ts;
+    return Date.now();
+  }
+
+  function formatDate(ts){
+    const d = new Date(toMillis(ts));
     return d.toLocaleDateString("it-IT", { day:"2-digit", month:"2-digit", year:"numeric" });
   }
 
-  /* ---------- Rendering lista ---------- */
+  function getAvg(t){
+    const vals = Object.values(t.ratings || {}).filter(v => typeof v === "number");
+    if(vals.length === 0) return { avg:null, count:0 };
+    return { avg: vals.reduce((a,b)=>a+b,0) / vals.length, count: vals.length };
+  }
+
+  function canDelete(t){ return !!currentUser && (t.ownerId === currentUser.uid || isAdmin()); }
+  function canEdit(t){ return !!currentUser && t.ownerId === currentUser.uid; }
+
+  function showError(msg){
+    const el = document.getElementById("errorBanner");
+    el.textContent = msg;
+    el.hidden = false;
+  }
+  function clearError(){
+    document.getElementById("errorBanner").hidden = true;
+  }
+
+  /* ================= AUTENTICAZIONE ================= */
+  const authScreen = document.getElementById("authScreen");
+  const appRoot = document.getElementById("appRoot");
+  const authError = document.getElementById("authError");
+  const authUsername = document.getElementById("authUsername");
+  const authPassword = document.getElementById("authPassword");
+  const authPasswordConfirm = document.getElementById("authPasswordConfirm");
+  const confirmField = document.getElementById("confirmField");
+  const authSubmit = document.getElementById("authSubmit");
+  const tabLogin = document.getElementById("tabLogin");
+  const tabRegister = document.getElementById("tabRegister");
+
+  function setAuthMode(mode){
+    authMode = mode;
+    authError.textContent = "";
+    tabLogin.classList.toggle("active", mode === "login");
+    tabRegister.classList.toggle("active", mode === "register");
+    confirmField.hidden = mode !== "register";
+    authSubmit.textContent = mode === "login" ? "Accedi" : "Crea account";
+  }
+  tabLogin.addEventListener("click", () => setAuthMode("login"));
+  tabRegister.addEventListener("click", () => setAuthMode("register"));
+
+  function authErrorMessage(err){
+    const code = err && err.code;
+    if(code === "auth/email-already-in-use") return "Questo nome utente è già stato preso. Scegline un altro.";
+    if(code === "auth/weak-password") return "La password deve avere almeno 6 caratteri.";
+    if(code === "auth/invalid-credential" || code === "auth/wrong-password" || code === "auth/user-not-found") return "Nome utente o password non corretti.";
+    if(code === "auth/too-many-requests") return "Troppi tentativi: riprova più tardi.";
+    return "Si è verificato un errore: " + (err && err.message ? err.message : "riprova.");
+  }
+
+  authSubmit.addEventListener("click", async () => {
+    authError.textContent = "";
+    const username = authUsername.value.trim();
+    const password = authPassword.value;
+
+    if(!USERNAME_RE.test(username)){
+      authError.textContent = "Nome utente non valido: usa lettere, numeri, punto, trattino o underscore (3-20 caratteri).";
+      return;
+    }
+    if(password.length < 6){
+      authError.textContent = "La password deve avere almeno 6 caratteri.";
+      return;
+    }
+
+    authSubmit.disabled = true;
+    const email = usernameToEmail(username);
+
+    try{
+      if(authMode === "register"){
+        if(password !== authPasswordConfirm.value){
+          authError.textContent = "Le due password non coincidono.";
+          authSubmit.disabled = false;
+          return;
+        }
+        const cred = await auth.createUserWithEmailAndPassword(email, password);
+        await db.collection("users").doc(cred.user.uid).set({
+          displayName: username,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      }else{
+        await auth.signInWithEmailAndPassword(email, password);
+      }
+    }catch(err){
+      authError.textContent = authErrorMessage(err);
+    }finally{
+      authSubmit.disabled = false;
+    }
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", () => auth.signOut());
+
+  async function loadUserProfile(uid, email){
+    const snap = await db.collection("users").doc(uid).get();
+    if(snap.exists) return snap.data();
+    // auto-riparazione: se il profilo manca per qualche motivo, lo ricreiamo dal nome dedotto dall'email
+    const derived = (email || "utente").split("@")[0];
+    const profile = { displayName: derived, createdAt: firebase.firestore.FieldValue.serverTimestamp() };
+    await db.collection("users").doc(uid).set(profile).catch(()=>{});
+    return profile;
+  }
+
+  auth.onAuthStateChanged(async (user) => {
+    if(user){
+      try{
+        const profile = await loadUserProfile(user.uid, user.email);
+        currentUser = { uid: user.uid, displayName: profile.displayName };
+        authScreen.hidden = true;
+        appRoot.hidden = false;
+        document.getElementById("userPillName").textContent = currentUser.displayName;
+        document.getElementById("adminBadge").hidden = !isAdmin();
+        subscribeTracks();
+      }catch(err){
+        authError.textContent = "Errore nel caricamento del profilo: " + err.message;
+        authScreen.hidden = false;
+        appRoot.hidden = true;
+      }
+    }else{
+      currentUser = null;
+      if(unsubscribeTracks){ unsubscribeTracks(); unsubscribeTracks = null; }
+      tracks = []; tracksLoaded = false;
+      appRoot.hidden = true;
+      authScreen.hidden = false;
+      authUsername.value = ""; authPassword.value = ""; authPasswordConfirm.value = "";
+      setAuthMode("login");
+    }
+  });
+
+  /* ================= DATI CONDIVISI (Firestore) ================= */
+  function subscribeTracks(){
+    if(unsubscribeTracks) unsubscribeTracks();
+    tracksLoaded = false;
+    render();
+    unsubscribeTracks = db.collection("tracks").onSnapshot(
+      (snapshot) => {
+        tracks = snapshot.docs.map(d => Object.assign({ id:d.id }, d.data()));
+        tracksLoaded = true;
+        clearError();
+        render();
+      },
+      (err) => {
+        tracksLoaded = true;
+        showError("Non riesco a leggere i brani condivisi (" + err.message + "). Controlla le regole di sicurezza Firestore — vedi SETUP.md.");
+        render();
+      }
+    );
+  }
+
+  /* ================= RENDERING LISTA ================= */
   const listEl = document.getElementById("trackList");
   const emptyEl = document.getElementById("emptyState");
   const noResultsEl = document.getElementById("noResults");
+  const loadingEl = document.getElementById("loadingText");
   const countEl = document.getElementById("trackCount");
 
   function getVisibleTracks(){
@@ -533,10 +639,10 @@
       switch(sort){
         case "title-asc": return a.title.localeCompare(b.title, "it", {sensitivity:"base"});
         case "title-desc": return b.title.localeCompare(a.title, "it", {sensitivity:"base"});
-        case "rating-desc": return (b.rating - a.rating) || (b.addedAt - a.addedAt);
-        case "rating-asc": return (a.rating - b.rating) || (b.addedAt - a.addedAt);
-        case "date-asc": return a.addedAt - b.addedAt;
-        default: return b.addedAt - a.addedAt; // date-desc
+        case "rating-desc": return (getAvg(b).avg||0) - (getAvg(a).avg||0) || (toMillis(b.addedAt) - toMillis(a.addedAt));
+        case "rating-asc": return (getAvg(a).avg||0) - (getAvg(b).avg||0) || (toMillis(b.addedAt) - toMillis(a.addedAt));
+        case "date-asc": return toMillis(a.addedAt) - toMillis(b.addedAt);
+        default: return toMillis(b.addedAt) - toMillis(a.addedAt); // date-desc
       }
     });
 
@@ -544,12 +650,18 @@
   }
 
   function render(){
+    if(!tracksLoaded){
+      loadingEl.hidden = false;
+      emptyEl.hidden = true; noResultsEl.hidden = true; listEl.innerHTML = "";
+      countEl.textContent = "";
+      return;
+    }
+    loadingEl.hidden = true;
+
     countEl.textContent = tracks.length === 1 ? "1 brano" : tracks.length + " brani";
 
     if(tracks.length === 0){
-      emptyEl.hidden = false;
-      noResultsEl.hidden = true;
-      listEl.innerHTML = "";
+      emptyEl.hidden = false; noResultsEl.hidden = true; listEl.innerHTML = "";
       return;
     }
     emptyEl.hidden = true;
@@ -561,41 +673,45 @@
 
   function renderTrack(t, index){
     const isExpanded = expandedId === t.id;
-    const thumb = t.thumbnail
-      ? `<img src="${escapeHtml(t.thumbnail)}" alt="" loading="lazy">`
-      : ICONS.note;
+    const thumb = t.thumbnail ? `<img src="${escapeHtml(t.thumbnail)}" alt="" loading="lazy">` : ICONS.note;
 
-    const metaParts = [];
-    if(t.artist) metaParts.push(escapeHtml(t.artist));
-    metaParts.push(`<span class="date">${formatDate(t.addedAt)}</span>`);
-    const metaHtml = metaParts.join('<span class="dot">·</span>');
+    const ownerLabel = (currentUser && t.ownerId === currentUser.uid) ? "tu" : escapeHtml(t.ownerName || "?");
+    const metaHtml = `<span class="owner">${ownerLabel}</span><span class="dot">·</span><span class="date">${formatDate(t.addedAt)}</span>` +
+      (t.artist ? `<span class="dot">·</span>${escapeHtml(t.artist)}` : "");
 
-    const nowPlaying = isExpanded
-      ? `<span class="now-playing"><span></span><span></span><span></span></span>`
-      : "";
+    const nowPlaying = isExpanded ? `<span class="now-playing"><span></span><span></span><span></span></span>` : "";
 
-    const playIcon = (t.type === "youtube" || t.kind === "audio" || t.kind === "video")
-      ? (isExpanded ? ICONS.stop : ICONS.play)
-      : ICONS.external;
-    const playTitle = (t.type === "youtube" || t.kind === "audio" || t.kind === "video")
-      ? (isExpanded ? "Interrompi" : "Ascolta")
-      : "Apri il link";
+    const playable = (t.type === "youtube" || t.kind === "audio" || t.kind === "video");
+    const playIcon = playable ? (isExpanded ? ICONS.stop : ICONS.play) : ICONS.external;
+    const playTitle = playable ? (isExpanded ? "Interrompi" : "Ascolta") : "Apri il link";
 
-    const deleteControls = pendingDeleteId === t.id
-      ? `<div class="confirm-delete">
+    const showDelete = canDelete(t);
+    const showEdit = canEdit(t);
+
+    let actionButtons = "";
+    if(pendingDeleteId === t.id){
+      actionButtons = `<div class="confirm-delete">
            <span>Eliminare?</span>
            <button class="yes" data-action="confirm-delete" data-id="${t.id}">Sì</button>
            <button class="no" data-action="cancel-delete">No</button>
-         </div>`
-      : `<button class="icon-btn play-btn" data-action="play" data-id="${t.id}" title="${playTitle}">${playIcon}</button>
-         <button class="icon-btn" data-action="edit" data-id="${t.id}" title="Modifica">${ICONS.pencil}</button>
-         <button class="icon-btn delete-btn" data-action="delete" data-id="${t.id}" title="Elimina">${ICONS.trash}</button>`;
+         </div>`;
+    }else{
+      actionButtons = `<button class="icon-btn play-btn" data-action="play" data-id="${t.id}" title="${playTitle}">${playIcon}</button>`;
+      if(showEdit) actionButtons += `<button class="icon-btn" data-action="edit" data-id="${t.id}" title="Modifica">${ICONS.pencil}</button>`;
+      if(showDelete) actionButtons += `<button class="icon-btn delete-btn" data-action="delete" data-id="${t.id}" title="Elimina">${ICONS.trash}</button>`;
+    }
 
+    const myRating = (currentUser && t.ratings) ? (t.ratings[currentUser.uid] || 0) : 0;
+    const heights = {1:"30%",2:"45%",3:"60%",4:"80%",5:"100%"};
     const ratingBars = [1,2,3,4,5].map(n => {
-      const heights = {1:"30%",2:"45%",3:"60%",4:"80%",5:"100%"};
-      const filled = n <= t.rating ? "filled" : "";
+      const filled = n <= myRating ? "filled" : "";
       return `<button class="bar ${filled}" style="--h:${heights[n]}" data-action="rate" data-id="${t.id}" data-value="${n}" title="Vota ${n}/5"></button>`;
     }).join("");
+
+    const { avg, count } = getAvg(t);
+    const avgHtml = avg !== null
+      ? `<span class="rating-avg">Media <strong>${avg.toFixed(1)}</strong>/5 · ${count} voto${count===1?"":"i"}</span>`
+      : `<span class="rating-avg">Nessun voto</span>`;
 
     let playerHtml = "";
     if(isExpanded){
@@ -616,55 +732,58 @@
           <h3 class="track-title">${nowPlaying}${escapeHtml(t.title)}</h3>
           <p class="track-meta">${metaHtml}</p>
         </div>
-        <div class="rating">
-          ${ratingBars}
-          <button class="reset-rating ${t.rating > 0 ? "visible" : ""}" data-action="reset-rating" data-id="${t.id}" title="Azzera valutazione">×</button>
+        <div class="rating-block">
+          <div class="rating">
+            ${ratingBars}
+            <button class="reset-rating ${myRating > 0 ? "visible" : ""}" data-action="reset-rating" data-id="${t.id}" title="Azzera il tuo voto">×</button>
+          </div>
+          ${avgHtml}
         </div>
-        <div class="track-actions">${deleteControls}</div>
+        <div class="track-actions">${actionButtons}</div>
         ${playerHtml}
       </article>
     `;
   }
 
-  /* ---------- Azioni sulla lista (delegazione eventi) ---------- */
-  listEl.addEventListener("click", (e) => {
+  /* ---------- Azioni sulla lista ---------- */
+  listEl.addEventListener("click", async (e) => {
     const btn = e.target.closest("[data-action]");
-    if(!btn) return;
+    if(!btn || !currentUser) return;
     const action = btn.dataset.action;
     const id = btn.dataset.id;
+    const track = tracks.find(t => t.id === id);
 
     if(action === "rate"){
-      const track = tracks.find(t => t.id === id);
-      track.rating = Number(btn.dataset.value);
-      saveTracks(); render();
+      const value = Number(btn.dataset.value);
+      try{ await db.collection("tracks").doc(id).update({ ["ratings." + currentUser.uid]: value }); }
+      catch(err){ showError("Non sono riuscito a salvare il voto: " + err.message); }
     }
     else if(action === "reset-rating"){
-      const track = tracks.find(t => t.id === id);
-      track.rating = 0;
-      saveTracks(); render();
+      try{ await db.collection("tracks").doc(id).update({ ["ratings." + currentUser.uid]: firebase.firestore.FieldValue.delete() }); }
+      catch(err){ showError("Non sono riuscito ad azzerare il voto: " + err.message); }
     }
     else if(action === "play"){
-      const track = tracks.find(t => t.id === id);
+      if(!track) return;
       const playable = track.type === "youtube" || track.kind === "audio" || track.kind === "video";
-      if(!playable){
-        window.open(track.url, "_blank", "noopener");
-        return;
-      }
+      if(!playable){ window.open(track.url, "_blank", "noopener"); return; }
       expandedId = (expandedId === id) ? null : id;
       render();
     }
     else if(action === "edit"){
+      if(!track || !canEdit(track)) return;
       openModal(id);
     }
     else if(action === "delete"){
+      if(!track || !canDelete(track)) return;
       pendingDeleteId = id;
       render();
     }
     else if(action === "confirm-delete"){
-      tracks = tracks.filter(t => t.id !== id);
+      if(!track || !canDelete(track)) return;
+      try{ await db.collection("tracks").doc(id).delete(); }
+      catch(err){ showError("Non sono riuscito a eliminare il brano: " + err.message); }
       pendingDeleteId = null;
       if(expandedId === id) expandedId = null;
-      saveTracks(); render();
     }
     else if(action === "cancel-delete"){
       pendingDeleteId = null;
@@ -672,15 +791,12 @@
     }
   });
 
-  // hover preview sulle barre di rating
   listEl.addEventListener("mouseover", (e) => {
     const bar = e.target.closest(".bar");
     if(!bar) return;
     const group = bar.closest(".rating");
     const value = Number(bar.dataset.value);
-    group.querySelectorAll(".bar").forEach(b => {
-      b.classList.toggle("preview", Number(b.dataset.value) <= value);
-    });
+    group.querySelectorAll(".bar").forEach(b => b.classList.toggle("preview", Number(b.dataset.value) <= value));
   });
   listEl.addEventListener("mouseout", (e) => {
     const group = e.target.closest && e.target.closest(".rating");
@@ -689,11 +805,10 @@
     }
   });
 
-  /* ---------- Ricerca e ordinamento ---------- */
   document.getElementById("searchInput").addEventListener("input", render);
   document.getElementById("sortSelect").addEventListener("change", render);
 
-  /* ---------- Modale aggiungi/modifica ---------- */
+  /* ================= MODALE AGGIUNGI/MODIFICA ================= */
   const overlay = document.getElementById("modalOverlay");
   const modalTitleEl = document.getElementById("modalTitle");
   const inputUrl = document.getElementById("inputUrl");
@@ -717,17 +832,12 @@
       metaCache.thumbnail = t.thumbnail || null;
     }else{
       modalTitleEl.textContent = "Aggiungi brano";
-      inputUrl.value = "";
-      inputTitle.value = "";
-      inputArtist.value = "";
+      inputUrl.value = ""; inputTitle.value = ""; inputArtist.value = "";
     }
     overlay.hidden = false;
     inputUrl.focus();
   }
-
-  function closeModal(){
-    overlay.hidden = true;
-  }
+  function closeModal(){ overlay.hidden = true; }
 
   document.getElementById("addBtn").addEventListener("click", () => openModal(null));
   document.getElementById("cancelBtn").addEventListener("click", closeModal);
@@ -741,7 +851,6 @@
       metaStatus.className = "meta-status err";
       return;
     }
-
     const videoId = extractYouTubeId(url);
 
     if(videoId){
@@ -771,7 +880,7 @@
     }
   });
 
-  document.getElementById("saveBtn").addEventListener("click", () => {
+  document.getElementById("saveBtn").addEventListener("click", async () => {
     const url = inputUrl.value.trim();
     const title = inputTitle.value.trim();
     const artist = inputArtist.value.trim();
@@ -787,33 +896,31 @@
     const kind = isYouTube ? null : detectOtherType(url);
     const thumbnail = metaCache.thumbnail || (isYouTube ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : null);
 
-    if(editingId){
-      const t = tracks.find(tr => tr.id === editingId);
-      t.url = url; t.title = title; t.artist = artist;
-      t.type = isYouTube ? "youtube" : "other";
-      t.videoId = videoId || null;
-      t.kind = kind;
-      t.thumbnail = thumbnail;
-    }else{
-      tracks.push({
-        id: "t_" + Date.now() + "_" + Math.random().toString(36).slice(2,8),
-        url, title, artist,
-        type: isYouTube ? "youtube" : "other",
-        videoId: videoId || null,
-        kind,
-        thumbnail,
-        rating: 0,
-        addedAt: Date.now()
-      });
-    }
+    const trackData = {
+      url, title, artist,
+      type: isYouTube ? "youtube" : "other",
+      videoId: videoId || null,
+      kind, thumbnail
+    };
 
-    saveTracks();
-    closeModal();
-    render();
+    try{
+      if(editingId){
+        await db.collection("tracks").doc(editingId).update(trackData);
+      }else{
+        trackData.ownerId = currentUser.uid;
+        trackData.ownerName = currentUser.displayName;
+        trackData.ratings = {};
+        trackData.addedAt = firebase.firestore.FieldValue.serverTimestamp();
+        await db.collection("tracks").add(trackData);
+      }
+      closeModal();
+    }catch(err){
+      metaStatus.textContent = "Errore nel salvataggio: " + err.message;
+      metaStatus.className = "meta-status err";
+    }
   });
 
-  /* ---------- Avvio ---------- */
-  render();
+  setAuthMode("login");
 
 })();
 </script>

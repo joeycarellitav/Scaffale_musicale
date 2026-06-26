@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scaffale Musicale — la tua collezione di brani</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2311121a'/%3E%3Cg fill='%23e8a33d'%3E%3Crect x='8' y='15' width='3' height='9' rx='1.2'/%3E%3Crect x='14.5' y='9' width='3' height='15' rx='1.2'/%3E%3Crect x='21' y='12' width='3' height='12' rx='1.2'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#11121a;
+    --bg-elevated:#1a1c28;
+    --bg-elevated-hover:#21232f;
+    --border:#2c2e3d;
+    --border-soft:#22232f;
+    --text:#eef0f5;
+    --text-muted:#8d90a3;
+    --text-faint:#5c5f73;
+    --accent:#e8a33d;
+    --accent-dim:#a9762d;
+    --accent-soft:rgba(232,163,61,0.14);
+    --accent2:#7c83fd;
+    --danger:#e2566b;
+    --danger-soft:rgba(226,86,107,0.14);
+    --font-display:'Fraunces', Georgia, serif;
+    --font-body:'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono:'JetBrains Mono', 'SF Mono', Consolas, monospace;
+    --radius:14px;
+    --radius-sm:8px;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(232,163,61,0.07), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(124,131,253,0.06), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    min-height:100vh;
+    line-height:1.45;
+  }
+
+  a{ color:var(--accent2); }
+  button{ font-family:inherit; cursor:pointer; }
+  input{ font-family:inherit; }
+  :focus-visible{ outline:2px solid var(--accent2); outline-offset:2px; border-radius:6px; }
+
+  .app{
+    max-width:980px;
+    margin:0 auto;
+    padding:40px 24px 80px;
+  }
+
+  /* ---------- Header ---------- */
+  .topbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:24px;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:36px;
+  }
+  .brand{ display:flex; gap:14px; align-items:center; }
+  .brand-mark{ width:46px; height:46px; flex:none; }
+  .brand h1{
+    font-family:var(--font-display);
+    font-size:28px;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .brand .tagline{
+    margin:2px 0 0;
+    font-size:13.5px;
+    color:var(--text-muted);
+  }
+
+  .controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+  }
+  .track-count{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--text-faint);
+    white-space:nowrap;
+    padding-right:4px;
+  }
+  .search-wrap{ position:relative; }
+  .search-wrap input{
+    width:220px;
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:10px 12px 10px 34px;
+    border-radius:var(--radius-sm);
+    font-size:14px;
+  }
+  .search-wrap input::placeholder{ color:var(--text-faint); }
+  .search-wrap svg{
+    position:absolute; left:11px; top:50%; transform:translateY(-50%);
+    width:14px; height:14px; color:var(--text-faint); pointer-events:none;
+  }
+  select#sortSelect{
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:10px 12px;
+    border-radius:var(--radius-sm);
+    font-size:14px;
+    appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238d90a3'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 12px center;
+    padding-right:30px;
+  }
+
+  .btn-primary{
+    background:var(--accent);
+    color:#1a1305;
+    border:none;
+    font-weight:600;
+    font-size:14px;
+    padding:10px 16px;
+    border-radius:var(--radius-sm);
+    transition:background .15s ease, transform .1s ease;
+  }
+  .btn-primary:hover{ background:#f0b258; }
+  .btn-primary:active{ transform:scale(0.97); }
+
+  .btn-ghost{
+    background:transparent;
+    color:var(--text-muted);
+    border:1px solid var(--border);
+    font-size:14px;
+    padding:10px 16px;
+    border-radius:var(--radius-sm);
+  }
+  .btn-ghost:hover{ color:var(--text); border-color:var(--text-faint); }
+
+  .btn-secondary{
+    background:var(--bg-elevated-hover);
+    color:var(--text);
+    border:1px solid var(--border);
+    font-size:13px;
+    padding:9px 13px;
+    border-radius:var(--radius-sm);
+    white-space:nowrap;
+  }
+  .btn-secondary:hover{ border-color:var(--accent2); }
+
+  /* ---------- Empty state ---------- */
+  .empty-state{
+    text-align:center;
+    padding:70px 20px;
+    color:var(--text-muted);
+    border:1px dashed var(--border);
+    border-radius:var(--radius);
+  }
+  .empty-state svg{ width:54px; height:54px; color:var(--text-faint); margin-bottom:14px; }
+  .empty-state h2{
+    font-family:var(--font-display);
+    font-size:20px;
+    color:var(--text);
+    margin:0 0 6px;
+    font-weight:600;
+  }
+  .empty-state p{ margin:0; font-size:14px; }
+
+  .no-results{
+    text-align:center;
+    padding:40px 20px;
+    color:var(--text-faint);
+    font-size:14px;
+  }
+
+  /* ---------- Track list ---------- */
+  .track-list{ display:flex; flex-direction:column; gap:10px; }
+
+  .track{
+    background:var(--bg-elevated);
+    border:1px solid var(--border-soft);
+    border-radius:var(--radius);
+    padding:14px 16px;
+    display:grid;
+    grid-template-columns:36px 64px 1fr auto auto;
+    gap:16px;
+    align-items:center;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .track:hover{ border-color:var(--border); background:var(--bg-elevated-hover); }
+  .track.is-expanded{ border-color:var(--accent-dim); }
+
+  .track-index{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--text-faint);
+    text-align:center;
+  }
+
+  .track-thumb{
+    width:64px; height:64px;
+    border-radius:10px;
+    overflow:hidden;
+    background:linear-gradient(135deg, #20222f, #181a24);
+    display:flex; align-items:center; justify-content:center;
+    flex:none;
+  }
+  .track-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .track-thumb svg{ width:22px; height:22px; color:var(--text-faint); }
+
+  .track-info{ min-width:0; }
+  .track-title{
+    font-family:var(--font-display);
+    font-size:17px;
+    font-weight:600;
+    margin:0;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .track-meta{
+    margin:3px 0 0;
+    font-size:12.5px;
+    color:var(--text-muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .track-meta .dot{ margin:0 6px; color:var(--text-faint); }
+  .track-meta .date{ font-family:var(--font-mono); color:var(--text-faint); }
+
+  /* now-playing mini equalizer */
+  .now-playing{ display:inline-flex; align-items:flex-end; gap:2px; height:11px; margin-right:6px; vertical-align:middle; }
+  .now-playing span{ width:2.5px; background:var(--accent); border-radius:1px; animation:eqPulse 0.9s ease-in-out infinite; }
+  .now-playing span:nth-child(1){ height:40%; animation-delay:0s; }
+  .now-playing span:nth-child(2){ height:100%; animation-delay:.2s; }
+  .now-playing span:nth-child(3){ height:65%; animation-delay:.4s; }
+  @keyframes eqPulse{ 0%,100%{ transform:scaleY(0.4); } 50%{ transform:scaleY(1); } }
+  @media (prefers-reduced-motion: reduce){
+    .now-playing span{ animation:none; height:70% !important; }
+  }
+
+  /* rating bars */
+  .rating{ display:flex; align-items:flex-end; gap:3px; height:22px; padding:0 4px; }
+  .rating .bar{
+    width:5px; height:var(--h);
+    background:var(--border);
+    border:none; border-radius:2px;
+    padding:0; transition:background .1s ease;
+  }
+  .rating .bar.filled{ background:var(--accent); }
+  .rating .bar.preview{ background:var(--accent2); }
+  .rating .reset-rating{
+    background:none; border:none; color:var(--text-faint);
+    font-size:13px; padding:0 0 0 4px; line-height:1; visibility:hidden;
+  }
+  .rating .reset-rating.visible{ visibility:visible; }
+  .rating .reset-rating:hover{ color:var(--danger); }
+
+  .track-actions{ display:flex; align-items:center; gap:4px; }
+  .icon-btn{
+    width:34px; height:34px;
+    display:flex; align-items:center; justify-content:center;
+    background:transparent; border:1px solid transparent; border-radius:9px;
+    color:var(--text-muted);
+  }
+  .icon-btn svg{ width:16px; height:16px; }
+  .icon-btn:hover{ background:var(--bg-elevated-hover); color:var(--text); border-color:var(--border); }
+  .icon-btn.play-btn{ color:var(--accent); }
+  .icon-btn.play-btn:hover{ background:var(--accent-soft); border-color:var(--accent-dim); }
+  .icon-btn.delete-btn:hover{ color:var(--danger); background:var(--danger-soft); border-color:var(--danger); }
+
+  .confirm-delete{ display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--text-muted); }
+  .confirm-delete button{ background:none; border:none; font-size:12.5px; font-weight:600; padding:4px 6px; border-radius:6px; }
+  .confirm-delete .yes{ color:var(--danger); }
+  .confirm-delete .yes:hover{ background:var(--danger-soft); }
+  .confirm-delete .no{ color:var(--text-muted); }
+  .confirm-delete .no:hover{ background:var(--bg-elevated-hover); }
+
+  .track-player{
+    grid-column:1 / -1;
+    margin-top:12px;
+    border-top:1px solid var(--border-soft);
+    padding-top:12px;
+  }
+  .track-player iframe{
+    width:100%; aspect-ratio:16/9; border:none; border-radius:10px; display:block;
+  }
+  .track-player audio, .track-player video{ width:100%; display:block; border-radius:10px; }
+  .track-player video{ max-height:420px; background:#000; }
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(10,11,16,0.7);
+    display:flex; align-items:center; justify-content:center;
+    padding:20px; z-index:50;
+  }
+  .modal-overlay[hidden]{ display:none; }
+  .modal{
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    width:100%; max-width:440px;
+    padding:26px;
+  }
+  .modal h2{
+    font-family:var(--font-display);
+    font-size:21px; font-weight:600; margin:0 0 18px;
+  }
+  .field{ margin-bottom:16px; }
+  .field label{
+    display:block; font-size:12.5px; color:var(--text-muted);
+    margin-bottom:6px; font-weight:500;
+  }
+  .field-row{ display:flex; gap:8px; }
+  .field-row input{ flex:1; }
+  .field input{
+    width:100%;
+    background:var(--bg); border:1px solid var(--border); color:var(--text);
+    padding:10px 12px; border-radius:var(--radius-sm); font-size:14px;
+  }
+  .field input:focus{ border-color:var(--accent2); }
+  .meta-status{
+    font-size:12.5px; color:var(--text-faint);
+    margin:-6px 0 16px; min-height:16px;
+  }
+  .meta-status.ok{ color:var(--accent); }
+  .meta-status.err{ color:var(--danger); }
+  .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:6px; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:640px){
+    .track{
+      grid-template-columns:44px 1fr auto;
+      grid-template-areas:
+        "thumb info actions"
+        "rating rating rating";
+      row-gap:10px;
+    }
+    .track-index{ display:none; }
+    .track-thumb{ grid-area:thumb; width:44px; height:44px; }
+    .track-info{ grid-area:info; }
+    .track-actions{ grid-area:actions; }
+    .rating{ grid-area:rating; justify-self:start; }
+    .topbar{ flex-direction:column; }
+    .controls{ width:100%; }
+    .search-wrap, .search-wrap input{ width:100%; }
+    .controls > *{ flex:1 1 auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="32" height="32" rx="8" fill="#1a1c28" stroke="#2c2e3d"/>
+        <rect x="8" y="15" width="3" height="9" rx="1.2" fill="#e8a33d"/>
+        <rect x="14.5" y="9" width="3" height="15" rx="1.2" fill="#e8a33d"/>
+        <rect x="21" y="12" width="3" height="12" rx="1.2" fill="#e8a33d"/>
+      </svg>
+      <div>
+        <h1>Scaffale Musicale</h1>
+        <p class="tagline">La tua collezione personale di brani — link, voti, ascolto.</p>
+      </div>
+    </div>
+    <div class="controls">
+      <span class="track-count" id="trackCount">0 brani</span>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="searchInput" placeholder="Cerca per titolo o artista…" autocomplete="off">
+      </div>
+      <select id="sortSelect">
+        <option value="date-desc">Più recenti</option>
+        <option value="date-asc">Meno recenti</option>
+        <option value="title-asc">Titolo (A→Z)</option>
+        <option value="title-desc">Titolo (Z→A)</option>
+        <option value="rating-desc">Punteggio (alto→basso)</option>
+        <option value="rating-asc">Punteggio (basso→alto)</option>
+      </select>
+      <button class="btn-primary" id="addBtn">+ Aggiungi brano</button>
+    </div>
+  </header>
+
+  <div class="empty-state" id="emptyState" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="12" r="2.6"/></svg>
+    <h2>Lo scaffale è vuoto</h2>
+    <p>Aggiungi il tuo primo brano da un link YouTube (o altro) per iniziare la collezione.</p>
+  </div>
+
+  <div class="no-results" id="noResults" hidden>Nessun brano corrisponde alla ricerca.</div>
+
+  <main class="track-list" id="trackList"></main>
+
+</div>
+
+<!-- Modal: aggiungi / modifica -->
+<div class="modal-overlay" id="modalOverlay" hidden>
+  <div class="modal">
+    <h2 id="modalTitle">Aggiungi brano</h2>
+
+    <div class="field">
+      <label for="inputUrl">Link del brano (YouTube o altro)</label>
+      <div class="field-row">
+        <input type="url" id="inputUrl" placeholder="https://www.youtube.com/watch?v=…" required>
+        <button class="btn-secondary" id="detectBtn" type="button">Rileva info</button>
+      </div>
+      <div class="meta-status" id="metaStatus"></div>
+    </div>
+
+    <div class="field">
+      <label for="inputTitle">Titolo</label>
+      <input type="text" id="inputTitle" placeholder="Titolo del brano" required>
+    </div>
+
+    <div class="field">
+      <label for="inputArtist">Artista <span style="color:var(--text-faint);">(opzionale)</span></label>
+      <input type="text" id="inputArtist" placeholder="Nome dell'artista">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancelBtn" type="button">Annulla</button>
+      <button class="btn-primary" id="saveBtn" type="button">Salva</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const STORAGE_KEY = "scaffaleMusicale.tracks.v1";
+
+  /* ---------- Icone SVG ---------- */
+  const ICONS = {
+    play:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5.5v13a1 1 0 0 0 1.52.85l11-6.5a1 1 0 0 0 0-1.7l-11-6.5A1 1 0 0 0 7 5.5z"/></svg>`,
+    stop:`<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>`,
+    pencil:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>`,
+    trash:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>`,
+    external:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></svg>`,
+    note:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`
+  };
+
+  /* ---------- Stato ---------- */
+  let tracks = loadTracks();
+  let expandedId = null;
+  let pendingDeleteId = null;
+  let metaCache = { videoId:null, thumbnail:null }; // dati rilevati nel modale corrente
+  let editingId = null;
+
+  /* ---------- Persistenza ---------- */
+  function loadTracks(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    }catch(e){ return []; }
+  }
+  function saveTracks(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(tracks)); }
+    catch(e){ console.error("Salvataggio non riuscito", e); }
+  }
+
+  /* ---------- Utility ---------- */
+  function escapeHtml(str){
+    return String(str || "").replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[c]));
+  }
+
+  function extractYouTubeId(url){
+    try{
+      const u = new URL(url);
+      const host = u.hostname.replace(/^www\./,"");
+      if(host === "youtu.be") return u.pathname.slice(1).split("/")[0] || null;
+      if(host === "youtube.com" || host === "m.youtube.com"){
+        if(u.pathname === "/watch") return u.searchParams.get("v");
+        const parts = u.pathname.split("/").filter(Boolean);
+        if(parts[0] === "embed" || parts[0] === "shorts" || parts[0] === "live") return parts[1] || null;
+      }
+    }catch(e){}
+    return null;
+  }
+
+  function detectOtherType(url){
+    try{
+      const path = new URL(url).pathname.toLowerCase();
+      if(/\.(mp3|wav|ogg|m4a|flac|aac)$/.test(path)) return "audio";
+      if(/\.(mp4|webm|mov|m4v)$/.test(path)) return "video";
+    }catch(e){}
+    return "link";
+  }
+
+  async function fetchYouTubeMeta(url){
+    const res = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`);
+    if(!res.ok) throw new Error("oEmbed fallito");
+    return res.json();
+  }
+
+  function formatDate(iso){
+    const d = new Date(iso);
+    return d.toLocaleDateString("it-IT", { day:"2-digit", month:"2-digit", year:"numeric" });
+  }
+
+  /* ---------- Rendering lista ---------- */
+  const listEl = document.getElementById("trackList");
+  const emptyEl = document.getElementById("emptyState");
+  const noResultsEl = document.getElementById("noResults");
+  const countEl = document.getElementById("trackCount");
+
+  function getVisibleTracks(){
+    const q = document.getElementById("searchInput").value.trim().toLowerCase();
+    const sort = document.getElementById("sortSelect").value;
+
+    let list = tracks.slice();
+
+    if(q){
+      list = list.filter(t =>
+        t.title.toLowerCase().includes(q) ||
+        (t.artist || "").toLowerCase().includes(q)
+      );
+    }
+
+    list.sort((a,b) => {
+      switch(sort){
+        case "title-asc": return a.title.localeCompare(b.title, "it", {sensitivity:"base"});
+        case "title-desc": return b.title.localeCompare(a.title, "it", {sensitivity:"base"});
+        case "rating-desc": return (b.rating - a.rating) || (b.addedAt - a.addedAt);
+        case "rating-asc": return (a.rating - b.rating) || (b.addedAt - a.addedAt);
+        case "date-asc": return a.addedAt - b.addedAt;
+        default: return b.addedAt - a.addedAt; // date-desc
+      }
+    });
+
+    return list;
+  }
+
+  function render(){
+    countEl.textContent = tracks.length === 1 ? "1 brano" : tracks.length + " brani";
+
+    if(tracks.length === 0){
+      emptyEl.hidden = false;
+      noResultsEl.hidden = true;
+      listEl.innerHTML = "";
+      return;
+    }
+    emptyEl.hidden = true;
+
+    const visible = getVisibleTracks();
+    noResultsEl.hidden = visible.length !== 0;
+    listEl.innerHTML = visible.map((t, i) => renderTrack(t, i+1)).join("");
+  }
+
+  function renderTrack(t, index){
+    const isExpanded = expandedId === t.id;
+    const thumb = t.thumbnail
+      ? `<img src="${escapeHtml(t.thumbnail)}" alt="" loading="lazy">`
+      : ICONS.note;
+
+    const metaParts = [];
+    if(t.artist) metaParts.push(escapeHtml(t.artist));
+    metaParts.push(`<span class="date">${formatDate(t.addedAt)}</span>`);
+    const metaHtml = metaParts.join('<span class="dot">·</span>');
+
+    const nowPlaying = isExpanded
+      ? `<span class="now-playing"><span></span><span></span><span></span></span>`
+      : "";
+
+    const playIcon = (t.type === "youtube" || t.kind === "audio" || t.kind === "video")
+      ? (isExpanded ? ICONS.stop : ICONS.play)
+      : ICONS.external;
+    const playTitle = (t.type === "youtube" || t.kind === "audio" || t.kind === "video")
+      ? (isExpanded ? "Interrompi" : "Ascolta")
+      : "Apri il link";
+
+    const deleteControls = pendingDeleteId === t.id
+      ? `<div class="confirm-delete">
+           <span>Eliminare?</span>
+           <button class="yes" data-action="confirm-delete" data-id="${t.id}">Sì</button>
+           <button class="no" data-action="cancel-delete">No</button>
+         </div>`
+      : `<button class="icon-btn play-btn" data-action="play" data-id="${t.id}" title="${playTitle}">${playIcon}</button>
+         <button class="icon-btn" data-action="edit" data-id="${t.id}" title="Modifica">${ICONS.pencil}</button>
+         <button class="icon-btn delete-btn" data-action="delete" data-id="${t.id}" title="Elimina">${ICONS.trash}</button>`;
+
+    const ratingBars = [1,2,3,4,5].map(n => {
+      const heights = {1:"30%",2:"45%",3:"60%",4:"80%",5:"100%"};
+      const filled = n <= t.rating ? "filled" : "";
+      return `<button class="bar ${filled}" style="--h:${heights[n]}" data-action="rate" data-id="${t.id}" data-value="${n}" title="Vota ${n}/5"></button>`;
+    }).join("");
+
+    let playerHtml = "";
+    if(isExpanded){
+      if(t.type === "youtube"){
+        playerHtml = `<div class="track-player"><iframe src="https://www.youtube.com/embed/${t.videoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>`;
+      }else if(t.kind === "audio"){
+        playerHtml = `<div class="track-player"><audio src="${escapeHtml(t.url)}" controls autoplay></audio></div>`;
+      }else if(t.kind === "video"){
+        playerHtml = `<div class="track-player"><video src="${escapeHtml(t.url)}" controls autoplay></video></div>`;
+      }
+    }
+
+    return `
+      <article class="track ${isExpanded ? "is-expanded" : ""}" data-id="${t.id}">
+        <div class="track-index">${String(index).padStart(3,"0")}</div>
+        <div class="track-thumb">${thumb}</div>
+        <div class="track-info">
+          <h3 class="track-title">${nowPlaying}${escapeHtml(t.title)}</h3>
+          <p class="track-meta">${metaHtml}</p>
+        </div>
+        <div class="rating">
+          ${ratingBars}
+          <button class="reset-rating ${t.rating > 0 ? "visible" : ""}" data-action="reset-rating" data-id="${t.id}" title="Azzera valutazione">×</button>
+        </div>
+        <div class="track-actions">${deleteControls}</div>
+        ${playerHtml}
+      </article>
+    `;
+  }
+
+  /* ---------- Azioni sulla lista (delegazione eventi) ---------- */
+  listEl.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-action]");
+    if(!btn) return;
+    const action = btn.dataset.action;
+    const id = btn.dataset.id;
+
+    if(action === "rate"){
+      const track = tracks.find(t => t.id === id);
+      track.rating = Number(btn.dataset.value);
+      saveTracks(); render();
+    }
+    else if(action === "reset-rating"){
+      const track = tracks.find(t => t.id === id);
+      track.rating = 0;
+      saveTracks(); render();
+    }
+    else if(action === "play"){
+      const track = tracks.find(t => t.id === id);
+      const playable = track.type === "youtube" || track.kind === "audio" || track.kind === "video";
+      if(!playable){
+        window.open(track.url, "_blank", "noopener");
+        return;
+      }
+      expandedId = (expandedId === id) ? null : id;
+      render();
+    }
+    else if(action === "edit"){
+      openModal(id);
+    }
+    else if(action === "delete"){
+      pendingDeleteId = id;
+      render();
+    }
+    else if(action === "confirm-delete"){
+      tracks = tracks.filter(t => t.id !== id);
+      pendingDeleteId = null;
+      if(expandedId === id) expandedId = null;
+      saveTracks(); render();
+    }
+    else if(action === "cancel-delete"){
+      pendingDeleteId = null;
+      render();
+    }
+  });
+
+  // hover preview sulle barre di rating
+  listEl.addEventListener("mouseover", (e) => {
+    const bar = e.target.closest(".bar");
+    if(!bar) return;
+    const group = bar.closest(".rating");
+    const value = Number(bar.dataset.value);
+    group.querySelectorAll(".bar").forEach(b => {
+      b.classList.toggle("preview", Number(b.dataset.value) <= value);
+    });
+  });
+  listEl.addEventListener("mouseout", (e) => {
+    const group = e.target.closest && e.target.closest(".rating");
+    if(group && !group.contains(e.relatedTarget)){
+      group.querySelectorAll(".bar").forEach(b => b.classList.remove("preview"));
+    }
+  });
+
+  /* ---------- Ricerca e ordinamento ---------- */
+  document.getElementById("searchInput").addEventListener("input", render);
+  document.getElementById("sortSelect").addEventListener("change", render);
+
+  /* ---------- Modale aggiungi/modifica ---------- */
+  const overlay = document.getElementById("modalOverlay");
+  const modalTitleEl = document.getElementById("modalTitle");
+  const inputUrl = document.getElementById("inputUrl");
+  const inputTitle = document.getElementById("inputTitle");
+  const inputArtist = document.getElementById("inputArtist");
+  const metaStatus = document.getElementById("metaStatus");
+
+  function openModal(id){
+    editingId = id || null;
+    metaCache = { videoId:null, thumbnail:null };
+    metaStatus.textContent = "";
+    metaStatus.className = "meta-status";
+
+    if(editingId){
+      const t = tracks.find(tr => tr.id === editingId);
+      modalTitleEl.textContent = "Modifica brano";
+      inputUrl.value = t.url;
+      inputTitle.value = t.title;
+      inputArtist.value = t.artist || "";
+      metaCache.videoId = t.videoId || null;
+      metaCache.thumbnail = t.thumbnail || null;
+    }else{
+      modalTitleEl.textContent = "Aggiungi brano";
+      inputUrl.value = "";
+      inputTitle.value = "";
+      inputArtist.value = "";
+    }
+    overlay.hidden = false;
+    inputUrl.focus();
+  }
+
+  function closeModal(){
+    overlay.hidden = true;
+  }
+
+  document.getElementById("addBtn").addEventListener("click", () => openModal(null));
+  document.getElementById("cancelBtn").addEventListener("click", closeModal);
+  overlay.addEventListener("click", (e) => { if(e.target === overlay) closeModal(); });
+  document.addEventListener("keydown", (e) => { if(e.key === "Escape" && !overlay.hidden) closeModal(); });
+
+  document.getElementById("detectBtn").addEventListener("click", async () => {
+    const url = inputUrl.value.trim();
+    if(!url){
+      metaStatus.textContent = "Inserisci prima un link.";
+      metaStatus.className = "meta-status err";
+      return;
+    }
+
+    const videoId = extractYouTubeId(url);
+
+    if(videoId){
+      metaCache.videoId = videoId;
+      metaStatus.textContent = "Recupero informazioni da YouTube…";
+      metaStatus.className = "meta-status";
+      try{
+        const meta = await fetchYouTubeMeta(url);
+        inputTitle.value = meta.title || inputTitle.value;
+        if(!inputArtist.value) inputArtist.value = meta.author_name || "";
+        metaCache.thumbnail = meta.thumbnail_url || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+        metaStatus.textContent = "✓ Titolo e copertina recuperati da YouTube.";
+        metaStatus.className = "meta-status ok";
+      }catch(err){
+        metaCache.thumbnail = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+        metaStatus.textContent = "Non sono riuscito a recuperare i dati automaticamente: inserisci il titolo a mano. La riproduzione funzionerà comunque.";
+        metaStatus.className = "meta-status err";
+      }
+    }else{
+      const kind = detectOtherType(url);
+      metaCache.videoId = null;
+      metaCache.thumbnail = null;
+      if(kind === "audio") metaStatus.textContent = "Link audio diretto: riproduzione integrata disponibile. Inserisci titolo e artista a mano.";
+      else if(kind === "video") metaStatus.textContent = "Link video diretto: riproduzione integrata disponibile. Inserisci titolo e artista a mano.";
+      else metaStatus.textContent = "Link non-YouTube: il brano si aprirà in una nuova scheda per l'ascolto. Inserisci titolo e artista a mano.";
+      metaStatus.className = "meta-status";
+    }
+  });
+
+  document.getElementById("saveBtn").addEventListener("click", () => {
+    const url = inputUrl.value.trim();
+    const title = inputTitle.value.trim();
+    const artist = inputArtist.value.trim();
+
+    if(!url || !title){
+      metaStatus.textContent = "Link e titolo sono obbligatori.";
+      metaStatus.className = "meta-status err";
+      return;
+    }
+
+    const videoId = metaCache.videoId || extractYouTubeId(url);
+    const isYouTube = !!videoId;
+    const kind = isYouTube ? null : detectOtherType(url);
+    const thumbnail = metaCache.thumbnail || (isYouTube ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : null);
+
+    if(editingId){
+      const t = tracks.find(tr => tr.id === editingId);
+      t.url = url; t.title = title; t.artist = artist;
+      t.type = isYouTube ? "youtube" : "other";
+      t.videoId = videoId || null;
+      t.kind = kind;
+      t.thumbnail = thumbnail;
+    }else{
+      tracks.push({
+        id: "t_" + Date.now() + "_" + Math.random().toString(36).slice(2,8),
+        url, title, artist,
+        type: isYouTube ? "youtube" : "other",
+        videoId: videoId || null,
+        kind,
+        thumbnail,
+        rating: 0,
+        addedAt: Date.now()
+      });
+    }
+
+    saveTracks();
+    closeModal();
+    render();
+  });
+
+  /* ---------- Avvio ---------- */
+  render();
+
+})();
+</script>
+</body>
+</html>

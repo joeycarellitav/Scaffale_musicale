@@ -505,7 +505,7 @@
 
     const { avg, count } = getAvg(t);
     const avgHtml = avg !== null
-      ? `<span class="rating-avg">Media <strong>${avg.toFixed(1)}</strong>/5 · ${count} voto${count===1?"":"i"}</span>`
+      ? `<span class="rating-avg">Media <strong>${avg.toFixed(1)}</strong>/5 · ${count} vot${count===1?"o":"i"}</span>`
       : `<span class="rating-avg">Nessun voto</span>`;
 
     let playerHtml = "";
